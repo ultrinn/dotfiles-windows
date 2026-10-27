@@ -1,0 +1,24 @@
+[safe]
+	directory = %(prefix)///wsl.localhost/Ubuntu-24.04/home/gerrtrav/source/insightsql
+[user]
+	name = Travis Gerry
+	email = gerrtrav@showplacewood.com
+[init]
+	defaultBranch = master
+[pull]
+	rebase = true
+[diff]
+	tool = vsdiffmerge
+[difftool]
+	prompt = true
+[difftool "vsdiffmerge"]
+	cmd = \"C:\\Program Files\\Microsoft SQL Server Management Studio 21\\Release\\Common7\\IDE\\CommonExtensions\\Microsoft\\TeamFoundation\\Team Explorer\\vsdiffmerge.exe\" \"$LOCAL\" \"$REMOTE\" //t
+	keepBackup = false
+[merge]
+	tool = vsdiffmerge
+[mergetool]
+	prompt = true
+[mergetool "vsdiffmerge"]
+	cmd = \"C:\\Program Files\\Microsoft SQL Server Management Studio 21\\Release\\Common7\\IDE\\CommonExtensions\\Microsoft\\TeamFoundation\\Team Explorer\\vsdiffmerge.exe\" \"$REMOTE\" \"$LOCAL\" \"$BASE\" \"$MERGED\" //m
+	keepBackup = false
+	trustExitCode = true
