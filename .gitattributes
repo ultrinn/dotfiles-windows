@@ -1,0 +1,2 @@
+# Windows repo: CRLF in the working tree, LF in the repo
+* text=auto eol=crlf
