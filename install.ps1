@@ -8,14 +8,23 @@
     <name>.bak-<timestamp> first.
 
     Symbolic links need Developer Mode (Settings > System > For developers) or an elevated prompt.
-    Without either, files are copied instead and a warning is shown; re-run after enabling
-    Developer Mode to switch to links.
+    Without either, files are copied instead and a warning is shown. Copies don't carry edits back
+    to the repo, so run with -Pull after changing settings on Windows, then commit.
+
+.PARAMETER Pull
+    Copy the files in place back into the repo instead of installing them. Use this when the
+    installed files are copies rather than links.
 
 .EXAMPLE
     powershell -ExecutionPolicy Bypass -File .\install.ps1
+
+.EXAMPLE
+    powershell -ExecutionPolicy Bypass -File .\install.ps1 -Pull
 #>
 [CmdletBinding()]
-param()
+param(
+    [switch] $Pull
+)
 
 $ErrorActionPreference = 'Stop'
 $repo = $PSScriptRoot
@@ -59,8 +68,27 @@ function Set-DotfileLink {
     }
     catch {
         Copy-Item $Source $Target
-        Write-Warning "copied $Target (could not create a link: enable Developer Mode and re-run)"
+        Write-Warning "copied $Target (could not create a link: enable Developer Mode and re-run, or use -Pull after edits)"
     }
+}
+
+if ($Pull) {
+    foreach ($entry in $links.GetEnumerator()) {
+        $target = Get-Item $entry.Value -Force -ErrorAction SilentlyContinue
+        if (-not $target) {
+            Write-Warning "skipped $($entry.Value) (not found)"
+        }
+        elseif ($target.LinkType -eq 'SymbolicLink') {
+            Write-Host "skipped $($entry.Value) (already a link to the repo)"
+        }
+        else {
+            Copy-Item $entry.Value (Join-Path $repo $entry.Key) -Force
+            Write-Host "pulled $($entry.Value)"
+        }
+    }
+    Write-Host ''
+    Write-Host 'Review with git diff, then commit and push.'
+    return
 }
 
 foreach ($entry in $links.GetEnumerator()) {

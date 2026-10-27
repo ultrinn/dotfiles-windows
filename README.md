@@ -24,5 +24,11 @@ powershell -ExecutionPolicy Bypass -File $env:USERPROFILE\source\repos\dotfiles-
 
 ## Day to day
 
-The files in place are links into this repo, so changes (including ones made in the Windows Terminal
-settings UI) show up in `git status` here; commit and push them.
+If the install made links, changes (including ones made in the Windows Terminal settings UI) show up in
+`git status` here; commit and push them.
+
+If it made copies (no Developer Mode or admin rights, as on managed PCs), pull your changes back first:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\install.ps1 -Pull
+```
